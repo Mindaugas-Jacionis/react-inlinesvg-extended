@@ -3075,9 +3075,7 @@ var InlineSVG = function (_React$PureComponent) {
       }
     };
 
-    _this.state = {
-      status: Status.PENDING
-    };
+    _this.state = { status: Status.PENDING };
 
     _this.isActive = false;
     return _this;
@@ -3178,9 +3176,7 @@ var InlineSVG = function (_React$PureComponent) {
     value: function startLoad() {
       /* istanbul ignore else */
       if (this.isActive) {
-        this.setState({
-          status: Status.LOADING
-        }, this.load);
+        this.setState({ status: Status.LOADING }, this.load);
       }
     }
   }, {
@@ -3210,15 +3206,21 @@ var InlineSVG = function (_React$PureComponent) {
   }, {
     key: 'processSVG',
     value: function processSVG(svgText) {
+      // eslint-disable-next-line
       var _props2 = this.props,
           uniquifyIDs = _props2.uniquifyIDs,
           uniqueHash = _props2.uniqueHash,
-          remove = _props2.remove;
+          remove = _props2.remove,
+          add = _props2.add;
 
       var parsedText = svgText;
 
       if (remove.length) {
         parsedText = this.removeAttr(parsedText);
+      }
+
+      if (add.length) {
+        parsedText = this.addAttr(parsedText);
       }
 
       if (uniquifyIDs) {
@@ -3228,10 +3230,29 @@ var InlineSVG = function (_React$PureComponent) {
       return svgText;
     }
   }, {
+    key: 'addAttr',
+    value: function addAttr(svg) {
+      var add = this.props.add;
+
+      var parsedSvg = svg;
+
+      add.forEach(function (val) {
+        var attr = Object.keys(val)[0] + '="' + Object.values(val)[0] + '"';
+        console.log('Suka1', parsedSvg, attr);
+        parsedSvg = parsedSvg.replace('<svg', '<svg ' + attr);
+        console.log('Suka2', parsedSvg);
+      });
+
+      console.log('Suka3', parsedSvg);
+
+      return parsedSvg;
+    }
+  }, {
     key: 'removeAttr',
     value: function removeAttr(svg) {
       var remove = this.props.remove;
 
+      console.log('Gaidys', svg);
       var parsedSvg = svg;
 
       remove.forEach(function (val) {
@@ -3261,9 +3282,7 @@ var InlineSVG = function (_React$PureComponent) {
       var html = void 0;
 
       if (loadedText) {
-        html = {
-          __html: this.processSVG(loadedText)
-        };
+        html = { __html: this.processSVG(loadedText) };
       } else {
         content = this.renderContents();
       }
@@ -3280,6 +3299,7 @@ var InlineSVG = function (_React$PureComponent) {
 }(_react2.default.PureComponent);
 
 InlineSVG.propTypes = {
+  add: _propTypes2.default.array,
   cacheGetRequests: _propTypes2.default.bool,
   children: _propTypes2.default.node,
   className: _propTypes2.default.string,
