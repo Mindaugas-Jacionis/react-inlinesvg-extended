@@ -28,14 +28,13 @@ export default class InlineSVG extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      status: Status.PENDING,
-    };
+    this.state = { status: Status.PENDING };
 
     this.isActive = false;
   }
 
   static propTypes = {
+    add: PropTypes.array,
     cacheGetRequests: PropTypes.bool,
     children: PropTypes.node,
     className: PropTypes.string,
@@ -141,12 +140,7 @@ export default class InlineSVG extends React.PureComponent {
   startLoad() {
     /* istanbul ignore else */
     if (this.isActive) {
-      this.setState(
-        {
-          status: Status.LOADING,
-        },
-        this.load
-      );
+      this.setState({ status: Status.LOADING }, this.load);
     }
   }
 
@@ -192,11 +186,16 @@ export default class InlineSVG extends React.PureComponent {
   }
 
   processSVG(svgText) {
-    const { uniquifyIDs, uniqueHash, remove } = this.props;
+    // eslint-disable-next-line
+    const { uniquifyIDs, uniqueHash, remove, add } = this.props;
     let parsedText = svgText;
 
     if (remove.length) {
       parsedText = this.removeAttr(parsedText);
+    }
+
+    if (add.length) {
+      parsedText = this.addAttr(parsedText);
     }
 
     if (uniquifyIDs) {
@@ -204,6 +203,18 @@ export default class InlineSVG extends React.PureComponent {
     }
 
     return svgText;
+  }
+
+  addAttr(svg) {
+    const { add } = this.props;
+    let parsedSvg = svg;
+
+    add.forEach(val => {
+      const attr = `${Object.keys(val)[0]}="${Object.values(val)[0]}"`;
+      parsedSvg = parsedSvg.replace('<svg', `<svg ${attr}`);
+    });
+
+    return parsedSvg;
   }
 
   removeAttr(svg) {
@@ -234,9 +245,7 @@ export default class InlineSVG extends React.PureComponent {
     let html;
 
     if (loadedText) {
-      html = {
-        __html: this.processSVG(loadedText),
-      };
+      html = { __html: this.processSVG(loadedText) };
     } else {
       content = this.renderContents();
     }
