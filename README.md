@@ -80,8 +80,12 @@ This will receive a single argument:
 ```
 
 **remove** (`extended`) - `array`  
-Sometimes you find yourself in need of removing some attributes from original svg(i.e. `height`) and you don't have control over that anywhere but your code.  
+Sometimes you find yourself in need of removing some attributes from original svg(i.e. `height`) and you don't have control over that anywhere but your app code.  
 An array of attributes to remove from `<svg >` tag. Default `[]`(empty array).
+
+**add** (`extended`) - `array of objects`(`[{attrKey1: val}, {attrKey2: val}]`)  
+Sometimes you find yourself in need of adding some attributes to svg(i.e. `alt`) and you don't have control over that anywhere but your app code.  
+An array of objects `{ attribute: value }`(i.e.: `[{ alt: 'Illustration of ...' }]`) to add to `<svg >` tag. Default `[]`(empty array).
 
 
 Browser Support

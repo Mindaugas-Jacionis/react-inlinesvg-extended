@@ -51,6 +51,7 @@ export default class InlineSVG extends React.PureComponent {
   };
 
   static defaultProps = {
+    add: [],
     cacheGetRequests: false,
     onLoad: () => {},
     remove: [],
